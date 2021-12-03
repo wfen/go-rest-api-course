@@ -2,8 +2,9 @@ package http
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 // Handler - stores pointer to our comments service

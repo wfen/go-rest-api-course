@@ -9,7 +9,7 @@ import (
 
 // App - the struct which contains things like pointers
 // to database connections
-type App struct {}
+type App struct{}
 
 // Run - sets up our application
 func (app *App) Run() error {
@@ -22,7 +22,7 @@ func (app *App) Run() error {
 		fmt.Println("Failed to set up server")
 		return err
 	}
-	
+
 	return nil
 }
 
