@@ -4,18 +4,35 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/wfen/go-rest-api-course/internal/comment"
+
+	"github.com/wfen/go-rest-api-course/internal/database"
+
 	transportHTTP "github.com/wfen/go-rest-api-course/internal/transport/http"
 )
 
 // App - the struct which contains things like pointers
 // to database connections
-type App struct{}
+type App struct {
+}
 
 // Run - sets up our application
 func (app *App) Run() error {
 	fmt.Println("Setting Up Our APP")
 
-	handler := transportHTTP.NewHandler()
+	var err error
+	db, err := database.NewDatabase()
+	if err != nil {
+		return err
+	}
+	err = database.MigrateDB(db)
+	if err != nil {
+		return err
+	}
+
+	commentService := comment.NewService(db)
+
+	handler := transportHTTP.NewHandler(commentService)
 	handler.SetupRoutes()
 
 	if err := http.ListenAndServe(":8080", handler.Router); err != nil {

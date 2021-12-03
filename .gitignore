@@ -1,6 +1,9 @@
 # vendor folder
 vendor
 
+# environment files
+.env
+
 # Binaries
 go-rest-api-course
 
