@@ -35,9 +35,9 @@ spec:
               value: "$DB_PORT"
             - name: DB_TABLE
               value: "$DB_TABLE"
-            - name: DB_SSLMODE
-              value: "$DB_SSLMODE"
-            - name: DB_SSLROOTCERT
-              value: "$DB_SSLROOTCERT"
-            - name: DB_OPTIONS
-              value: "$DB_OPTIONS"
+            - name: SSL_MODE
+              value: "$SSL_MODE"
+            - name: SSL_ROOTCERT
+              value: "$SSL_ROOTCERT"
+            - name: OPTIONS
+              value: "$OPTIONS"

@@ -37,3 +37,8 @@ postgresql://postgres:<ENTER-PASSWORD>@free-tier.gcp-us-central1.cockroachlabs.c
   defaultdb?sslmode=verify-full&sslrootcert=$HOME/.postgresql/root.crt&options=--cluster%3Dbad-mojo-5100
 ```
 
+### JWT token creation
+
+* jwt.io: enter missionimpossible within "verify signature" [your-256-bit-secret]
+* paw: add https://paw.cloud/extensions/JsonWebTokenDynamicValue
+ HS256, payload can immitate jwt.io sub "1234567890", name "John Doe", ist 1516239022

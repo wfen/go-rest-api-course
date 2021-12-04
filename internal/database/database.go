@@ -5,29 +5,31 @@ import (
 	"net/url"
 	"os"
 
+	log "github.com/sirupsen/logrus"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 // NewDatabase - returns a pointer to a database object
 func NewDatabase() (*gorm.DB, error) {
-	fmt.Println("Setting up new database connection")
+	log.Info("Setting up new database connection")
 
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbTable := os.Getenv("DB_TABLE")
-	dbSSLMode := os.Getenv("DB_SSLMODE")
-	dbSSLRootCert := os.Getenv("DB_SSLROOTCERT")
-	dbOptions := os.Getenv("DB_OPTIONS")
+	sslMode := os.Getenv("SSL_MODE")
+	sslRootCert := os.Getenv("SSL_ROOTCERT")
+	options := os.Getenv("OPTIONS")
 
-	urlValues := url.Values{"sslmode": []string{dbSSLMode}}
-	if dbSSLRootCert != "" {
-		urlValues["sslrootcert"] = []string{dbSSLRootCert}
+	urlValues := url.Values{"sslmode": []string{sslMode}}
+	if sslRootCert != "" {
+		urlValues["sslrootcert"] = []string{sslRootCert}
 	}
-	if dbOptions != "" {
-		urlValues["options"] = []string{dbOptions}
+	if options != "" {
+		urlValues["options"] = []string{options}
 	}
 	dsn := url.URL{
 		User:     url.UserPassword(dbUsername, dbPassword),

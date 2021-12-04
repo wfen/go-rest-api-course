@@ -14,8 +14,15 @@ import (
 	"github.com/wfen/go-rest-api-course/internal/comment"
 )
 
+const (
+	// can be prepared at jwt.io with the appropriate 256-bit-secret
+	jwt string = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
+		"6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.yNO7b5Ai_C_6A-WedtDaCcb2eP7odajno5lmBvrRwpo"
+)
+
 func TestGetComments(t *testing.T) {
 	client := resty.New()
+	client.DisableWarn = true
 	resp, err := client.R().Get(BASE_URL + "/api/comment")
 	if err != nil {
 		t.Fail()
@@ -26,7 +33,10 @@ func TestGetComments(t *testing.T) {
 
 func TestPostComment(t *testing.T) {
 	client := resty.New()
+	client.DisableWarn = true
 	resp, err := client.R().
+		//SetBasicAuth("admin", "password").
+		SetHeader("Authorization", "Bearer "+jwt).
 		SetBody(`{"slug": "/PostComment", "author": "12345", "body": "hello world"}`).
 		Post(BASE_URL + "/api/comment")
 	assert.NoError(t, err)
@@ -38,6 +48,8 @@ func TestPostComment(t *testing.T) {
 	}
 
 	resp, err = client.R().
+		//SetBasicAuth("admin", "password").
+		SetHeader("Authorization", "Bearer "+jwt).
 		SetPathParams(map[string]string{
 			"id": strconv.FormatUint(uint64(cmt.ID), 10),
 		}).
@@ -48,8 +60,10 @@ func TestPostComment(t *testing.T) {
 
 func TestGetComment(t *testing.T) {
 	client := resty.New()
-
+	client.DisableWarn = true
 	resp, err := client.R().
+		//SetBasicAuth("admin", "password").
+		SetHeader("Authorization", "Bearer "+jwt).
 		SetBody(`{"slug": "/GetComment", "author": "12345", "body": "hello world"}`).
 		Post(BASE_URL + "/api/comment")
 	assert.NoError(t, err)
@@ -69,6 +83,8 @@ func TestGetComment(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode())
 
 	resp, err = client.R().
+		//SetBasicAuth("admin", "password").
+		SetHeader("Authorization", "Bearer "+jwt).
 		SetPathParams(map[string]string{
 			"id": strconv.FormatUint(uint64(cmt.ID), 10),
 		}).
@@ -79,7 +95,10 @@ func TestGetComment(t *testing.T) {
 
 func TestUpdateComment(t *testing.T) {
 	client := resty.New()
+	client.DisableWarn = true
 	resp, err := client.R().
+		//SetBasicAuth("admin", "password").
+		SetHeader("Authorization", "Bearer "+jwt).
 		SetBody(`{"slug": "/UpdateComment", "author": "12345", "body": "hello world"}`).
 		Post(BASE_URL + "/api/comment")
 	assert.NoError(t, err)
@@ -91,6 +110,8 @@ func TestUpdateComment(t *testing.T) {
 	}
 
 	resp, err = client.R().
+		//SetBasicAuth("admin", "password").
+		SetHeader("Authorization", "Bearer "+jwt).
 		SetPathParams(map[string]string{
 			"id": strconv.FormatUint(uint64(cmt.ID), 10),
 		}).
@@ -100,6 +121,8 @@ func TestUpdateComment(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode())
 
 	resp, err = client.R().
+		//SetBasicAuth("admin", "password").
+		SetHeader("Authorization", "Bearer "+jwt).
 		SetPathParams(map[string]string{
 			"id": strconv.FormatUint(uint64(cmt.ID), 10),
 		}).
@@ -110,7 +133,10 @@ func TestUpdateComment(t *testing.T) {
 
 func TestDeleteComment(t *testing.T) {
 	client := resty.New()
+	client.DisableWarn = true
 	resp, err := client.R().
+		//SetBasicAuth("admin", "password").
+		SetHeader("Authorization", "Bearer "+jwt).
 		SetBody(`{"slug": "/DeleteComment", "author": "12345", "body": "hello world"}`).
 		Post(BASE_URL + "/api/comment")
 	assert.NoError(t, err)
@@ -122,6 +148,8 @@ func TestDeleteComment(t *testing.T) {
 	}
 
 	resp, err = client.R().
+		//SetBasicAuth("admin", "password").
+		SetHeader("Authorization", "Bearer "+jwt).
 		SetPathParams(map[string]string{
 			"id": strconv.FormatUint(uint64(cmt.ID), 10),
 		}).
