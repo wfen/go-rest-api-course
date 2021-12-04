@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 
 	"gorm.io/driver/postgres"
@@ -11,18 +12,34 @@ import (
 // NewDatabase - returns a pointer to a database object
 func NewDatabase() (*gorm.DB, error) {
 	fmt.Println("Setting up new database connection")
+
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbTable := os.Getenv("DB_TABLE")
+	dbSSLMode := os.Getenv("DB_SSLMODE")
+	dbSSLRootCert := os.Getenv("DB_SSLROOTCERT")
+	dbOptions := os.Getenv("DB_OPTIONS")
 
-	// https://github.com/jackc/pgx
-	dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s database=%s sslmode=disable",
-		dbUsername, dbPassword, dbHost, dbPort, dbTable)
+	urlValues := url.Values{"sslmode": []string{dbSSLMode}}
+	if dbSSLRootCert != "" {
+		urlValues["sslrootcert"] = []string{dbSSLRootCert}
+	}
+	if dbOptions != "" {
+		urlValues["options"] = []string{dbOptions}
+	}
+	dsn := url.URL{
+		User:     url.UserPassword(dbUsername, dbPassword),
+		Scheme:   "postgresql",
+		Host:     fmt.Sprintf("%s:%s", dbHost, dbPort),
+		Path:     dbTable,
+		RawQuery: urlValues.Encode(),
+	}
+
 	db, err := gorm.Open(postgres.New(postgres.Config{
-		DSN:                  dsn,  // data source name, refer https://github.com/jackc/pgx
-		PreferSimpleProtocol: true, // disables implicit prepared statement usage. By default pgx automatically uses the extended protocol
+		DSN:                  dsn.String(), // data source name
+		PreferSimpleProtocol: true,         // disables implicit prepared statement usage.
 	}), &gorm.Config{})
 	if err != nil {
 		return db, err
